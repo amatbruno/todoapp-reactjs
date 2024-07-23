@@ -1,13 +1,26 @@
-
+import { useState } from 'react';
 import './App.css'
 import TaskPostIt from './components/TaskPostIt'
 import { IoMdClose } from "react-icons/io";
 
 function App() {
+  const [todos, setTodos] = useState([]);
+  const [value, setValue] = useState("");
 
   const togglePopup = () => {
     const formEl = document.getElementById('popup-form');
     formEl.classList.toggle('show');
+  }
+
+  const handleChange = (e) => {
+    setValue(e.target.value);
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setTodos([...todos, value]);
+    setValue("");
+    togglePopup();
   }
 
   return (
@@ -40,45 +53,41 @@ function App() {
               <input
                 className="form-input"
                 type="text"
-                id="name"
-                name="name"
-                required />
-              <label
-                className="form-label"
-                htmlFor="email">
-                Description
-              </label>
-              <textarea
-                className="form-input resize-none"
-                id="email"
-                rows={2}
-                required >
-              </textarea>
-              <label
-                className="form-label"
-                htmlFor="state">
-                State
-              </label>
-              <select
+                id="title"
+                name="title"
+                value={value}
+                onChange={handleChange}
                 required
-                className='form-input'
-                name="state"
-                id="state">
-                <option value="toBegin">To begin</option>
-                <option value="inProgress">In progress</option>
-                <option value="done">Done</option>
-              </select>
+              />
               <button
                 className="btn-submit"
-                type="submit">
+                type="submit"
+                onClick={handleSubmit}
+              >
                 Submit
               </button>
             </form>
           </div>
         </article>
       </div>
-      <main className='border mt-8 w-1/2 m-auto h-fit'>
 
+      <main className='py-3 mt-10 w-1/2 m-auto h-fit'>
+        <div>
+          <ul>
+            {
+              todos.length !== 0
+                ?
+                todos.map((todo) => (
+                  <li key={todo}><TaskPostIt data={todo} /></li>
+                ))
+                :
+                <div className='flex-col'>
+                  <p className='text-center font-bold text-lg mb-3'>Congrats! You don't have any ToDo right now!</p>
+                  <h1 className='text-center text-9xl'>👍</h1>
+                </div>
+            }
+          </ul>
+        </div>
       </main>
 
     </>
